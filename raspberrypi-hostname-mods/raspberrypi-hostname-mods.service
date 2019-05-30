@@ -1,0 +1,16 @@
+[Unit]
+Description=Copy user hostname
+ConditionPathExists=/boot/hostname
+Before=dhcpcd.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/bin/rm -rf /boot/raspberrypi-hostname-mods
+ExecStart=/bin/mv /boot/hostname /etc/hostname
+ExecStartPost=/bin/chmod 644 /etc/hostname
+ExecStartPost=/bin/sh -c 'sed -i "s@^127.0.1.1.*@127.0.1.1\t$(cat /etc/hostname)@" /etc/hosts'
+ExecStartPost=/bin/hostname --file /etc/hostname
+
+[Install]
+WantedBy=multi-user.target
