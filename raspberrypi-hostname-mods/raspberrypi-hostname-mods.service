@@ -1,7 +1,10 @@
 [Unit]
-Description=Copy user hostname
+Description=Set hostname
 ConditionPathExists=/boot/hostname
-Before=dhcpcd.service
+After=local-fs.target
+Wants=network-pre.target
+Before=network-pre.target
+DefaultDependencies=no
 
 [Service]
 Type=oneshot
